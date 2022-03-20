@@ -6,6 +6,7 @@ import (
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/types"
+	"go.mau.fi/whatsmeow/types/events"
 	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
@@ -37,6 +38,18 @@ func NewClient(id string) (*Client, <-chan whatsmeow.QRChannelItem) {
 	client := &Client{Client: whatsmeow.NewClient(device, clientLog)}
 	client.SetProxy(ieproxy.GetProxyFunc())
 	client.EnableAutoReply()
+	client.AddEventHandler(func(evt interface{}) {
+		switch evt.(type) {
+		case *events.ClientOutdated:
+		case *events.LoggedOut:
+			for i, c := range onlineClients {
+				if c.Store.ID == client.Store.ID {
+					onlineClients = append(onlineClients[:i], onlineClients[i+1:]...)
+					return
+				}
+			}
+		}
+	})
 
 	if client.Store.ID == nil {
 		c, _ := client.GetQRChannel(context.Background())
