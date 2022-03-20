@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -26,7 +25,7 @@ func main() {
 	g := gin.New()
 	g.Use(gin.Logger())
 	g.Use(gin.CustomRecovery(func(c *gin.Context, err interface{}) {
-		c.JSON(200, fmt.Sprint(err))
+		c.JSON(400, err)
 	}))
 	g.Use(ResponseMiddleware())
 	g.Use(cors.Default())
