@@ -10,6 +10,7 @@ import (
 	"whatsapp-client/api"
 )
 
+var version = "0.0.1"
 var host = flag.String("host", "127.0.0.1", "")
 var port = flag.String("port", "9000", "")
 
@@ -31,6 +32,9 @@ func main() {
 	g.Use(cors.Default())
 
 	group := g.Group("/api")
+	group.GET("/version", func(c *gin.Context) {
+		c.JSON(0, version)
+	})
 	group.POST("/upload", api.UploadAdd)
 	group.GET("/upload", api.UploadGet)
 	group.GET("/devices", api.DeviceQuery)
