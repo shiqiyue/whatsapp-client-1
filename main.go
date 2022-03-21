@@ -10,7 +10,7 @@ import (
 	"whatsapp-client/api"
 )
 
-var version = "0.0.1"
+var version = ""
 var mode = gin.DebugMode
 
 var host = flag.String("host", "127.0.0.1", "")
