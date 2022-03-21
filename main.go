@@ -11,8 +11,14 @@ import (
 )
 
 var version = "0.0.1"
+var mode = gin.DebugMode
+
 var host = flag.String("host", "127.0.0.1", "")
 var port = flag.String("port", "9000", "")
+
+func init() {
+	gin.SetMode(mode)
+}
 
 func main() {
 	flag.Parse()
@@ -28,6 +34,7 @@ func main() {
 	g.Use(gin.CustomRecovery(func(c *gin.Context, err interface{}) {
 		c.JSON(400, err)
 	}))
+
 	g.Use(ResponseMiddleware())
 	g.Use(cors.Default())
 
@@ -35,6 +42,7 @@ func main() {
 	group.GET("/version", func(c *gin.Context) {
 		c.JSON(0, version)
 	})
+
 	group.POST("/upload", api.UploadAdd)
 	group.GET("/upload", api.UploadGet)
 	group.GET("/devices", api.DeviceQuery)
