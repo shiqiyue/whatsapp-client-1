@@ -4,13 +4,14 @@ import (
 	"github.com/denisbrodbeck/machineid"
 	"github.com/gin-contrib/sse"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"go.mau.fi/whatsmeow"
 	"io"
 	"log"
 	"strings"
 	"whatsapp-client/whatsapp"
 )
+
+var version = ""
 
 func ClientLogin(c *gin.Context) {
 	c.Header("Content-Type", "text/event-stream")
@@ -23,10 +24,12 @@ func ClientLogin(c *gin.Context) {
 
 	if qrItemChan == nil {
 		client.Login()
+
 		sse.Encode(c.Writer, sse.Event{
 			Event: "jid",
 			Data:  client.Client.Store.ID.String(),
 		})
+
 		sse.Encode(c.Writer, sse.Event{
 			Event: "message",
 			Data:  "",
@@ -81,7 +84,6 @@ func ClientInfo(c *gin.Context) {
 	}
 	machineId = strings.ToUpper(machineId[:16])
 
-	version := viper.GetString("version")
 	c.JSON(0, gin.H{
 		"machineId": machineId,
 		"version":   version,

@@ -5,12 +5,10 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/spf13/viper"
 	"log"
 	"whatsapp-client/api"
 )
 
-var version = ""
 var mode = gin.DebugMode
 
 var host = flag.String("host", "127.0.0.1", "")
@@ -23,12 +21,6 @@ func init() {
 func main() {
 	flag.Parse()
 
-	viper.SetConfigFile("config.yaml")
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Println("Fatal error config file: %w \n", err)
-	}
-
 	g := gin.New()
 	g.Use(gin.Logger())
 	g.Use(gin.CustomRecovery(func(c *gin.Context, err interface{}) {
@@ -39,10 +31,6 @@ func main() {
 	g.Use(cors.Default())
 
 	group := g.Group("/api")
-	group.GET("/version", func(c *gin.Context) {
-		c.JSON(0, version)
-	})
-
 	group.POST("/upload", api.UploadAdd)
 	group.GET("/upload", api.UploadGet)
 	group.GET("/devices", api.DeviceQuery)

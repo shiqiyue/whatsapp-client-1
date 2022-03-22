@@ -1,9 +1,9 @@
 name: Go
 
 on:
-  create:
+  push:
     tags:
-      - 'v.+'
+      - v**
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
           GOARCH: amd64
           GOOS: windows
           CGO_ENABLED: 1
-        run: go build -o bin/whatsapp-client-win64.exe -ldflags "-X main.version=${{ github.ref_name }} -X main.mode=release" -v
+        run: go build -o bin/whatsapp-client-win64.exe -ldflags "-s -w -X api.version=${{ github.ref_name }} -X main.mode=release" -v
 
       - name: Run UPX
         uses: crazy-max/ghaction-upx@v1
