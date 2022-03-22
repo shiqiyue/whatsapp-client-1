@@ -22,7 +22,10 @@ func init() {
 		panic(err)
 	}
 	container = sqlstore.NewWithDB(db, "sqlite3", dbLog)
-
+	err = container.Upgrade()
+	if err != nil {
+		panic(err)
+	}
 	go func() {
 		devices, err := container.GetAllDevices()
 		if err != nil || len(devices) == 0 {
