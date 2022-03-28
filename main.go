@@ -11,8 +11,8 @@ import (
 
 var mode = gin.DebugMode
 
-var host = flag.String("host", "127.0.0.1", "")
-var port = flag.String("port", "9000", "")
+var host = flag.String("host", "", "")
+var port = flag.String("port", "8000", "")
 
 func init() {
 	gin.SetMode(mode)
@@ -29,6 +29,9 @@ func main() {
 
 	g.Use(ResponseMiddleware())
 	g.Use(cors.Default())
+	g.GET("/", func(c *gin.Context) {
+		c.JSON(200, "ok")
+	})
 
 	group := g.Group("/api")
 	group.POST("/upload", api.UploadAdd)
