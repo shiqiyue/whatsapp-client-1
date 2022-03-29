@@ -1,8 +1,11 @@
 name: Publish Release
 on:
-  push:
-    branches:
-    - main
+
+  create:
+
+    tags:
+
+    - v*
 
 jobs:
   release:
