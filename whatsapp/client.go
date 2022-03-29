@@ -2,7 +2,6 @@ package whatsapp
 
 import (
 	"context"
-	"github.com/mattn/go-ieproxy"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/types"
@@ -38,8 +37,6 @@ func NewClient(id, proxyStr string) (*Client, <-chan whatsmeow.QRChannelItem) {
 	client := &Client{Client: whatsmeow.NewClient(device, clientLog)}
 	if proxyStr != "" {
 		_ = client.SetProxyAddress(proxyStr)
-	} else {
-		client.SetProxy(ieproxy.GetProxyFunc())
 	}
 	client.EnableAutoReply()
 	client.AddEventHandler(func(evt interface{}) {
