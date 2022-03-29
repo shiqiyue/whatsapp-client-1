@@ -1,5 +1,4 @@
-name: Go
-
+name: Publish Release
 on:
   push:
     branches:
