@@ -12,7 +12,7 @@ import (
 var mode = gin.DebugMode
 
 var host = flag.String("host", "", "")
-var port = flag.String("port", "23111", "")
+var port = flag.String("port", "23112", "")
 
 func init() {
 	gin.SetMode(mode)
