@@ -27,12 +27,18 @@ jobs:
       #    - name: Test
       #      run: go test -v ./...
 
-      - name: Build
+      - name: Build64
         env:
           GOARCH: amd64
           GOOS: windows
           CGO_ENABLED: 1
         run: go build -o bin/whatsapp-client-win64.exe -ldflags "-s -w -X whatsapp-client/api.version=${{ github.ref_name }} -X main.mode=release" -v
+      - name: Build32
+        env:
+          GOARCH: 386
+          GOOS: windows
+          CGO_ENABLED: 1
+        run: go build -o bin/whatsapp-client-win32.exe -ldflags "-s -w -X whatsapp-client/api.version=${{ github.ref_name }} -X main.mode=release" -v
 
       - name: Run UPX
         uses: crazy-max/ghaction-upx@v1
