@@ -5,50 +5,35 @@ on:
     - main
 
 jobs:
-  build:
-    runs-on: windows-latest
+  release:
+    name: Release on GitHub
+
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
 
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
+    - name: Check out code
 
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~\AppData\Local\go-build
-            ~\go\pkg\mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+      uses: actions/checkout@v1
 
-      #    - name: Test
-      #      run: go test -v ./...
 
-      - name: Build64
-        env:
-          GOARCH: amd64
-          GOOS: windows
-          CGO_ENABLED: 1
-        run: go build -o bin/whatsapp-client-win64.exe -ldflags "-s -w -X whatsapp-client/api.version=${{ github.ref_name }} -X main.mode=release" -v
-      - name: Build32
-        env:
-          GOARCH: 386
-          GOOS: windows
-          CGO_ENABLED: 1
-        run: go build -o bin/whatsapp-client-win32.exe -ldflags "-s -w -X whatsapp-client/api.version=${{ github.ref_name }} -X main.mode=release" -v
+    - name: Validates GO releaser config
 
-      - name: Run UPX
-        uses: crazy-max/ghaction-upx@v1
-        with:
-          version: latest
-          files: ./bin/*.exe
-          args: -fq
+      uses: docker://goreleaser/goreleaser:latest
 
-      - name: Upload Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: bin/*
-          draft: true
+      with:
+
+        args: check
+
+
+    - name: Create release on GitHub
+
+      uses: docker://goreleaser/goreleaser:latest
+
+      with:
+
+        args: release
+
+      env:
+
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
