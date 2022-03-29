@@ -17,10 +17,12 @@ func ClientLogin(c *gin.Context) {
 	c.Header("Content-Type", "text/event-stream")
 	c.Header("Cache-Control", "no-cache")
 	c.Header("Connection", "keep-alive")
-
+	// 入参-jid(已登录的session的jid)
 	id := c.Query("jid")
+	// 入参-proxyStr(代理字符串)
+	proxyStr := c.Query("proxyStr")
 
-	client, qrItemChan := whatsapp.NewClient(id)
+	client, qrItemChan := whatsapp.NewClient(id, proxyStr)
 
 	if qrItemChan == nil {
 		client.Login()

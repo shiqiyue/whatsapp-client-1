@@ -26,14 +26,14 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	go func() {
-		devices, err := container.GetAllDevices()
-		if err != nil || len(devices) == 0 {
-			return
-		}
-		client, qrChan := NewClient(devices[0].ID.String())
-		if qrChan == nil {
-			client.Login()
-		}
-	}()
+	//go func() {
+	//	devices, err := container.GetAllDevices()
+	//	if err != nil || len(devices) == 0 {
+	//		return
+	//	}
+	//	client, qrChan := NewClient(devices[0].ID.String(), "")
+	//	if qrChan == nil {
+	//		client.Login()
+	//	}
+	//}()
 }

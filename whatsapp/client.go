@@ -2,6 +2,7 @@ package whatsapp
 
 import (
 	"context"
+	"github.com/mattn/go-ieproxy"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/types"
@@ -17,7 +18,7 @@ type Client struct {
 
 var onlineClients []*Client
 
-func NewClient(id string) (*Client, <-chan whatsmeow.QRChannelItem) {
+func NewClient(id, proxyStr string) (*Client, <-chan whatsmeow.QRChannelItem) {
 	var device *store.Device
 	if id == "" {
 		device = container.NewDevice()
@@ -35,8 +36,11 @@ func NewClient(id string) (*Client, <-chan whatsmeow.QRChannelItem) {
 
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 	client := &Client{Client: whatsmeow.NewClient(device, clientLog)}
-	// client.SetProxy(ieproxy.GetProxyFunc())
-	client.SetProxyAddress("http://localhost:10809")
+	if proxyStr != "" {
+		_ = client.SetProxyAddress(proxyStr)
+	} else {
+		client.SetProxy(ieproxy.GetProxyFunc())
+	}
 	client.EnableAutoReply()
 	client.AddEventHandler(func(evt interface{}) {
 		switch evt.(type) {
